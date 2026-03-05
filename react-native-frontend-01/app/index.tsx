@@ -1,8 +1,30 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-
+import "../awsConfig";
+import { signUp } from "aws-amplify/auth";
 export default function SignUp() {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+
+  const handleSignup = async () => {
+    try {
+      await signUp({
+        username: email,
+        password: "TempPassword123!",
+        options: {
+          userAttributes: {
+            email: email,
+            phone_number: phone
+          }
+        }
+      });
+  
+      alert("User created! Check your email for verification.");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -17,9 +39,17 @@ export default function SignUp() {
         onChangeText={setEmail}
       />
 
-      <TouchableOpacity style={styles.primaryButton}>
-        <Text style={styles.primaryText}>Sign Up with Email</Text>
-      </TouchableOpacity>
+<TextInput
+  placeholder="Phone Number (+1...)"
+  style={styles.input}
+  value={phone}
+  onChangeText={setPhone}
+/>
+      
+
+  <TouchableOpacity style={styles.primaryButton} onPress={handleSignup}>
+  <Text style={styles.primaryText}>Sign Up with Email</Text>
+</TouchableOpacity>
 
       <Text style={styles.orText}>
         Or, use one of the following options:
