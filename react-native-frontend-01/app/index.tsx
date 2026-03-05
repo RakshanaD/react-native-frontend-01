@@ -1,107 +1,108 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform
-} from "react-native";
+import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function LoginScreen() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password.");
-      return;
-    }
-
-    // Replace this with real authentication logic
-    Alert.alert("Success", `Welcome back, ${email}!`);
-  };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.card}>
-        <Text style={styles.title}>Login</Text>
+    <View style={styles.container}>
+      
+      <Text style={styles.logo}>goodreturn</Text>
+      <Text style={styles.title}>Sign Up</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
+      <TextInput
+        placeholder="Email Address"
+        style={styles.input}
+        value={email}
+        onChangeText={setEmail}
+      />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+      <TouchableOpacity style={styles.primaryButton}>
+        <Text style={styles.primaryText}>Sign Up with Email</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
+      <Text style={styles.orText}>
+        Or, use one of the following options:
+      </Text>
 
-        <TouchableOpacity>
-          <Text style={styles.link}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+      <TouchableOpacity style={styles.socialButton}>
+        <Text>Sign up with Google</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.socialButton}>
+        <Text>Sign up with Apple</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.socialButton}>
+        <Text>Sign up with Facebook</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.signIn}>
+        Already have an account? Sign In
+      </Text>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    padding: 30,
     justifyContent: "center",
-    padding: 20
+    backgroundColor: "#fff"
   },
-  card: {
-    backgroundColor: "#ffffff",
-    padding: 25,
-    borderRadius: 15,
-    elevation: 5
-  },
-  title: {
-    fontSize: 28,
+
+  logo: {
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center"
+    color: "#2563eb",
+    marginBottom: 10
   },
+
+  title: {
+    fontSize: 24,
+    marginBottom: 20
+  },
+
   input: {
     borderWidth: 1,
     borderColor: "#ddd",
-    borderRadius: 10,
-    padding: 12,
+    padding: 14,
+    borderRadius: 8,
     marginBottom: 15
   },
-  button: {
-    backgroundColor: "#4a90e2",
+
+  primaryButton: {
+    backgroundColor: "#2563eb",
     padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 10
+    borderRadius: 8,
+    alignItems: "center"
   },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16
+
+  primaryText: {
+    color: "white",
+    fontWeight: "600"
   },
-  link: {
-    marginTop: 15,
+
+  orText: {
     textAlign: "center",
-    color: "#4a90e2"
+    marginVertical: 20,
+    color: "#777"
+  },
+
+  socialButton: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 10
+  },
+
+  signIn: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "#2563eb"
   }
 });
