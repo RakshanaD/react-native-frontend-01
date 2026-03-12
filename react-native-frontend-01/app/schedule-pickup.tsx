@@ -7,17 +7,11 @@ import {
   FlatList,
 } from "react-native";
 import { router } from "expo-router";
-import { getPickupSlots, PickupSlot } from "./api/pickupApi";
+import { getPickupSlots, PickupSlot } from "../api/pickupApi";
 
 type PickupType = "Doorstep" | "Handover" | "Return Box";
 
-type Slot = {
-  id: number;
-  date: string;
-  time: string;
-};
-
-export default function SchedulePickup() {
+export default function ChooseCourier() {
   const [pickupType, setPickupType] = useState<PickupType>("Doorstep");
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [slots, setSlots] = useState<PickupSlot[]>([]);
@@ -27,13 +21,12 @@ export default function SchedulePickup() {
       const data = await getPickupSlots();
       setSlots(data);
     }
-  
+
     loadSlots();
   }, []);
 
-  const handleNext = () => {
-    if (!selectedSlot) return;
-    router.push("/confirm");
+const handleNext = () => {
+    router.push("/choose-courier" as any);
   };
 
   const pickupIcons = {
@@ -44,25 +37,26 @@ export default function SchedulePickup() {
 
   return (
     <View style={styles.container}>
-
       {/* Pickup Type */}
       <Text style={styles.sectionTitle}>Pick up Type</Text>
 
       <View style={styles.pickupRow}>
         {(["Doorstep", "Handover", "Return Box"] as PickupType[]).map(
           (type) => (
-<TouchableOpacity
-  key={type}
-  style={[styles.pickupCard, pickupType === type && styles.selectedPickup]}
-  onPress={() => setPickupType(type)}
->
-  <Text style={{ fontSize: 24, marginBottom: 6 }}>
-    {pickupIcons[type]}
-  </Text>
-  <Text style={[styles.pickupText, pickupType === type && styles.selectedText]}>
-    {type}
-  </Text>
-</TouchableOpacity>
+            <TouchableOpacity
+              key={type}
+              style={[styles.pickupCard, pickupType === type && styles.selectedPickup]}
+              onPress={() => setPickupType(type)}
+            >
+              <Text style={{ fontSize: 24, marginBottom: 6 }}>
+                {pickupIcons[type]}
+              </Text>
+              <Text
+                style={[styles.pickupText, pickupType === type && styles.selectedText]}
+              >
+                {type}
+              </Text>
+            </TouchableOpacity>
           )
         )}
       </View>
@@ -77,10 +71,7 @@ export default function SchedulePickup() {
         columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={[
-              styles.slotCard,
-              selectedSlot === item.id && styles.selectedSlot,
-            ]}
+            style={[styles.slotCard, selectedSlot === item.id && styles.selectedSlot]}
             onPress={() => setSelectedSlot(item.id)}
           >
             <Text style={styles.slotDate}>{item.date}</Text>
@@ -104,13 +95,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 
-  header: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: 20,
-    backgroundColor: "blue"
-  },
-
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
@@ -130,53 +114,56 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: "center",
     marginHorizontal: 5,
-  
+
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },
-    elevation: 3
+    elevation: 3,
   },
-  
+
   selectedPickup: {
-    backgroundColor: "#2563EB"
+    backgroundColor: "#2563EB",
   },
-  
+
   pickupText: {
     fontWeight: "600",
-    fontSize: 14
+    fontSize: 14,
   },
-  
+
   selectedText: {
-    color: "white"
-  },slotCard: {
+    color: "white",
+  },
+
+  slotCard: {
     width: "48%",
     backgroundColor: "#F6F7FB",
     padding: 20,
     borderRadius: 18,
     marginBottom: 16,
-  
+
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 3
+    elevation: 3,
   },
-  
+
   selectedSlot: {
-    backgroundColor: "#2563EB"
+    backgroundColor: "#2563EB",
   },
-  
+
   slotDate: {
     fontWeight: "700",
-    fontSize: 16
+    fontSize: 16,
   },
-  
+
   slotTime: {
     marginTop: 6,
     fontSize: 13,
-    color: "#6B7280"
+    color: "#6B7280",
   },
+
   nextButton: {
     marginTop: 20,
     backgroundColor: "#2563EB",
