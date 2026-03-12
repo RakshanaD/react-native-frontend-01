@@ -15,7 +15,9 @@ export default function Login() {
       const { tokens } = await fetchAuthSession();
       if (tokens?.accessToken) {
         console.log("⚠️ Already signed in, routing to home");
-        router.replace("/");
+       //router.replace("/");
+       router.replace("/schedule-pickup");
+      
         return;
       }
     } catch (_) {}

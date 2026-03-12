@@ -4,6 +4,7 @@ import { getCurrentUser, fetchAuthSession, signOut } from "aws-amplify/auth";
 import { Linking } from "react-native";
 import { Hub } from "aws-amplify/utils";
 import "../awsConfig";
+import React from "react";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function RootLayout() {
       console.log("🔔 Hub auth event:", payload.event);
       if (payload.event === "signedIn") {
         console.log("✅ Hub: signedIn — routing to /");
-        router.replace("/");
+        router.replace("/schedule-pickup");
       }
       if (payload.event === "signedOut") {
         console.log("🚪 Hub: signedOut — routing to /login");
