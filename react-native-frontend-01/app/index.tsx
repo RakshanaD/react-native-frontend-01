@@ -5,10 +5,16 @@ import { router } from "expo-router";
 
 export default function Home() {
     console.log("Home screen rendered"); // add this
-  
     const handleSignOut = async () => {
-      await signOut();
-      router.replace("/sign-up" as any);
+      console.log("🔴 Signing out...");
+      try {
+        await signOut({ global: true }); // <-- important
+        console.log("✅ Sign out success");
+      } catch (error: any) {
+        console.log("⚠️ Sign out error:", error.message);
+      } finally {
+        router.replace("/login");
+      }
     };
 
   return (

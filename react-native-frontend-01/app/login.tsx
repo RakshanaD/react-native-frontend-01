@@ -1,89 +1,62 @@
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import "../awsConfig";
-import { signUp } from "aws-amplify/auth";
-import { confirmSignUp } from "aws-amplify/auth";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { signInWithRedirect } from "aws-amplify/auth";
+import { Linking } from "react-native";
+import {fetchAuthSession } from "aws-amplify/auth";
 import { router } from "expo-router";
+import {useEffect} from "react";
 
-export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+export default function Login() {
+  console.log("🟡 Login screen rendered");
 
-
-  const handleSignup = async () => {
+  const handleGoogleLogin = async () => {
+    console.log("🔵 Google button pressed");
     try {
-      await signUp({
-        username: email,
-        password: "TempPassword123!",
-        options: {
-          userAttributes: {
-            email: email,
-            phone_number: phone
-          }
-        }
-      });
-  
-      router.push({ pathname: "/confirm", params: { email } }); // ✅ pass email
-    } catch (error: any) {
-      alert(error.message);
+      const { tokens } = await fetchAuthSession();
+      if (tokens?.accessToken) {
+        console.log("⚠️ Already signed in, routing to home");
+        router.replace("/");
+        return;
+      }
+    } catch (_) {}
+    
+    try {
+      console.log("🔵 Calling signInWithRedirect...");
+      await signInWithRedirect({
+        provider: "Google"
+      });    } catch (error: any) {
+      console.log("🔴 signInWithRedirect error:", error.message, error);
     }
   };
+  useEffect(() => {
+    Linking.getInitialURL().then((url) => {
+      console.log("🔗 Initial URL on login screen:", url);
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
-      
       <Text style={styles.logo}>goodreturn</Text>
-      <Text style={styles.title}>Sign Up</Text>
-
-      <TextInput
-        placeholder="Email Address"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-      />
-
-<TextInput
-  placeholder="Phone Number (+1...)"
-  style={styles.input}
-  value={phone}
-  onChangeText={setPhone}
-/>
-      
-
-  <TouchableOpacity style={styles.primaryButton} onPress={handleSignup}>
-  <Text style={styles.primaryText}>Sign Up with Email</Text>
-</TouchableOpacity>
-
-      <Text style={styles.orText}>
-        Or, use one of the following options:
-      </Text>
-
-      <TouchableOpacity style={styles.socialButton}>
-        <Text>Sign up with Google</Text>
+      <Text style={styles.title}>Sign in</Text>
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+        <Text style={styles.googleText}>Continue with Google</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.socialButton}>
-        <Text>Sign up with Apple</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.socialButton}>
-        <Text>Sign up with Facebook</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.signIn}>
-        Already have an account? Sign In
-      </Text>
-
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
     justifyContent: "center",
     backgroundColor: "#fff"
+  },
+
+  googleButton:{
+  },
+
+  googleText:{
+
   },
 
   logo: {
